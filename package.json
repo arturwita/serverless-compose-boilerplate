@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "dev": "./node_modules/.bin/serverless offline start -s dev --httpPort 1337 --lambdaPort 4000 --allowCache",
-    "test": "./node_modules/.bin/mocha -r ts-node/register ./shared/**/*.spec.ts ./functions/**/*.spec.ts --exit",
+    "test": "./node_modules/.bin/mocha -r ts-node/register \"./shared/**/*.spec.ts\" \"./functions/**/*.spec.ts\" --exit",
     "format": "./node_modules/.bin/prettier --write ./shared/**/*.ts functions/**/*.ts",
     "lint": "./node_modules/.bin/eslint -c eslint.json --ext .ts functions/",
     "lint-fix": "./node_modules/.bin/eslint -c eslint.json --ext .ts --fix functions/",
@@ -26,7 +26,8 @@
     "@babel/preset-typescript": "7.16.7",
     "@commitlint/cli": "^16.2.1",
     "@commitlint/config-conventional": "^16.2.1",
-    "@serverless/typescript": "^3.3.0",
+    "@serverless/compose": "^1.3.0",
+    "@serverless/typescript": "^3.21.0",
     "@types/aws-lambda": "^8.10.92",
     "@types/dotenv": "^8.2.0",
     "@types/mocha": "^9.1.0",
