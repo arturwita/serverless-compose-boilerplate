@@ -14,7 +14,7 @@ definitions:
         script:
           - npm install --legacy-peer-deps
           - npm run lint
-          - npm run tests
+          - npm run test
     - step: &deploy-example
         name: Deploy example service
         trigger: manual
