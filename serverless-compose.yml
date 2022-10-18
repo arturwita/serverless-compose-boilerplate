@@ -1,0 +1,6 @@
+services:
+  migration:
+    path: services/migration
+  example:
+    path: services/example
+    dependsOn: migration

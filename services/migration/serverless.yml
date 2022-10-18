@@ -1,0 +1,44 @@
+service: ${env:MIGRATION_SERVICE_APP_NAME}
+useDotenv: true
+plugins:
+  - serverless-step-functions-local
+  - serverless-step-functions
+  - serverless-webpack
+  - serverless-offline
+  - serverless-plugin-log-retention
+
+package: ${file(../common.yml):package}
+
+custom:
+  logRetentionInDays: ${file(../common.yml):logRetentionInDays}
+  webpack: ${file(../common.yml):webpack}
+
+provider:
+  name: ${file(../common.yml):providerName}
+  runtime: ${file(../common.yml):runtime}
+  region: ${file(../common.yml):region}
+  stage: ${file(../common.yml):stage}
+  memorySize: ${file(../common.yml):memorySize}
+  timeout: ${file(../common.yml):timeout}
+  environment:
+    APP_NAME: ${env:MIGRATION_SERVICE_APP_NAME}
+    AWS_LAMBDAS_REGION: ${env:AWS_LAMBDAS_REGION, 'eu-west-1'}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - ec2:CreateNetworkInterface
+            - ec2:DescribeNetworkInterfaces
+            - ec2:DeleteNetworkInterface
+            - ec2:DetachNetworkInterface
+          Resource: "*"
+        - Effect: Allow
+          Action:
+            - lambda:InvokeFunction
+          Resource:
+            - "*"
+
+functions:
+  - ${file(functions/migrations/function.yml)}
+  # PLOP_ADD_LAMBDA
