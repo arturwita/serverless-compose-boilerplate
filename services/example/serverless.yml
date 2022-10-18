@@ -64,5 +64,5 @@ resources:
     ExampleWorkflowStateMachine:
       Description: Example workflow state machine Arn
       Value:
-        Ref: ExampleWorkflow${self:service}${self:provider.stage}
+        Ref: ${self:service}${self:provider.stage}ExampleWorkflow
     # PLOP_ADD_WORKFLOW_RESOURCE
