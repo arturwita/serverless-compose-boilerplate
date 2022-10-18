@@ -14,7 +14,7 @@ definitions:
         script:
           - npm install --legacy-peer-deps
           - npm run lint
-          - npm run test
+        #  - npm run test # uncomment to enable running tests in pipelines
     - step: &deploy-example
         name: Deploy example service
         trigger: manual
