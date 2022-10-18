@@ -1,4 +1,4 @@
-import { PrimaryColumn, Column, OneToMany, Entity } from "typeorm";
+import { PrimaryColumn, Column, Entity } from "typeorm";
 import { v4 } from "uuid";
 
 interface ExampleModelProps {
@@ -24,6 +24,9 @@ export class ExampleModel {
 
   @Column()
   email: string;
+
+  @Column()
+  email2: string;
 
   @Column()
   firstName: string;

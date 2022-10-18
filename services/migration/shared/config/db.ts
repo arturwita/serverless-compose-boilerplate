@@ -1,11 +1,12 @@
 import Joi from "joi";
+import { ConnectionOptions } from "typeorm";
 import { pipeline } from "ts-pipe-compose";
 import { exampleMigration1605111464989 } from "../../migrations/1605111464989-example-migration";
-import { ExampleModel } from "../models/example.model";
+import { ExampleModel } from "../../../../shared/models/example.model";
 
 // MODELS_IMPORT
 
-const loadDbConfigFromEnvs = (env: any) => ({
+const loadDbConfigFromEnvs = (env: NodeJS.ProcessEnv): ConnectionOptions => ({
   type: "postgres",
   synchronize: false,
   logging: true,
@@ -18,13 +19,13 @@ const loadDbConfigFromEnvs = (env: any) => ({
     // PUT MIGRATIONS HERE
   ],
   cli: {
-    migrationsDir: "migrations",
+    migrationsDir: "services/migration/migrations",
   },
   url: env.POSTGRES_URL,
 });
 
-const validateDbConfig = (config: any) => {
-  const schema = Joi.object().keys({
+const validateDbConfig = (config: ConnectionOptions) => {
+  const schema = Joi.object<ConnectionOptions>().keys({
     type: Joi.string().required(),
     url: Joi.string().required(),
     synchronize: Joi.any().allow(false).required(),
@@ -45,6 +46,6 @@ const validateDbConfig = (config: any) => {
 
 const createDbConfigFromEnvs = pipeline(loadDbConfigFromEnvs, validateDbConfig);
 
-const config = createDbConfigFromEnvs(process.env);
+const dbConfig = createDbConfigFromEnvs(process.env);
 
-export = config;
+export = dbConfig;
