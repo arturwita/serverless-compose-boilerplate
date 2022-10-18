@@ -86,10 +86,27 @@ Deployment [pipeline](bitbucket-pipelines.yml) consist of two steps:
     - run test
 2. deploy (user action required)
 
+However, you can also deploy the application manually in the console:
+
+1. Firstly make sure that you have configured your AWS credentials, as described in
+   https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html
+
+2. Deploy the application to a particular stage:
+```
+sls deploy --stage <stage_name> --verbose
+```
+
+To deploy a single service run:
+
+```
+sls <service_name>:deploy --stage <stage_name> --verbose
+```
+
 ### Other good source of information
 
 - Variables in YAML files - https://serverless.com/framework/docs/providers/aws/guide/variables/
-- AWS configuration for serverless - https://serverless.com/framework/docs/providers/aws/cli-reference/config-credentials/
+- AWS configuration for serverless
+    - https://serverless.com/framework/docs/providers/aws/cli-reference/config-credentials/
 - Serverless Compose - https://www.serverless.com/framework/docs/guides/compose
 
 ### What do we use for testing lambdas?
