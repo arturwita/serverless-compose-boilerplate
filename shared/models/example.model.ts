@@ -26,9 +26,6 @@ export class ExampleModel {
   email: string;
 
   @Column()
-  email2: string;
-
-  @Column()
   firstName: string;
 
   @Column()
