@@ -1,8 +1,6 @@
 service: ${env:MIGRATION_SERVICE_APP_NAME}
 useDotenv: true
 plugins:
-  - serverless-step-functions-local
-  - serverless-step-functions
   - serverless-webpack
   - serverless-offline
   - serverless-plugin-log-retention
