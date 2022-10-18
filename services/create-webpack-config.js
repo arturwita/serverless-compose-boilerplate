@@ -2,7 +2,7 @@ const path = require("path");
 const slsw = require("serverless-webpack");
 const CopyPlugin = require("copy-webpack-plugin");
 
-export const createWebpackConfig = (dirname: string) => ({
+module.exports = (dirname) => ({
   plugins: [new CopyPlugin({ patterns: [{ from: ".env.dist" }] })],
   entry: slsw.lib.entries,
   mode: "none",
