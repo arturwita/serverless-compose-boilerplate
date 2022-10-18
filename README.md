@@ -2,65 +2,77 @@
  <img src="data/logo.svg" alt="" />
 </p>
 
-<p align="center">
-   Current travis build:
-  <a href="https://travis-ci.com/TheSoftwareHouse/serverless-boilerplate"><img src="https://travis-ci.com/TheSoftwareHouse/serverless-boilerplate.svg?branch=master" alt="build status" height="18"></a>
-  &emsp;
-</p>
-
-##
-
-Boilerplate code for rapidly creating ready-to-deploy Serverless Framework services.
-
-##
+Boilerplate code for rapidly creating ready-to-deploy Serverless Framework services using Serverless Compose.
 
 ### Quick Start
 
-- **Install**
+1. **Install packages**
 
 ```
-npm install
+npm install --legacy-peer-deps
 ```
 
-rename .env.dist to .env, fill all information
+2. **Set environment variables**
 
-- **Create lambda or workflow**
+Navigate to every service directory and create a `.env` file, for example by running these commands:
 
 ```
-npm run plop
+cd services/example && cp .env.dist .env
+cd ../migration && cp .env.dist .env
 ```
 
-##
+3. **Run migrations**
 
-### Development Local
+```
+npm run run-migrations
+```
 
-- npm install
-- rename .env.dist to .env
-- fill all information
-- npm run dev
+### Start application locally
 
-Tu run `serverless-step-functions-local` you need to run your docker service with command:
+1. **Make sure docker is up**
 
-``docker-compose up``
+```
+docker-compose-up -d
+```
 
-##
+2. **Start a service**
+
+```
+npm run dev:<service_name>
+```
 
 ### Run workflow locally
 
-- npm run start-workflow --workflow=NAME_OF_THE_WORKFLOW
+1. **Make sure docker is up**
+
+```
+docker-compose-up -d
+```
+
+2. **Start a service which contains this workflow (terminal 1)**
+
+```
+npm run dev:<service_name>
+```
+
+3. **Run the workflow (terminal 2)**
+
+```
+npm run start-workflow:<service_name> --workflow=<workflow_name>
+```
 
 ### Follow workflow logs
 
 To follow all the logs from the step function executions you can use the command:
 
-``npm run get-sf-logs``
-##
+```
+npm run get-sf-logs:<service_name>
+```
 
 ### Develop workflow
 
-We support ASL for Step Functions. Make sure to install AWS Toolkit so you can render graph for step functions and validate its syntax easily.
-
-##
+We support ASL for Step Functions. Make sure to install AWS Toolkit, so you can render graph for step functions and
+validate its syntax easily.
 
 ### Deploy
 
@@ -69,57 +81,57 @@ The best choice for deployment is the bitbucket pipeline.
 Deployment [pipeline](bitbucket-pipelines.yml) consist of two steps:
 
 1. compile (automated start)
-   - build
-   - run lamda offline
-   - run test
+    - build
+    - run lint
+    - run test
 2. deploy (user action required)
 
-##
+However, you can also deploy the application manually in the console:
+
+1. Firstly make sure that you have configured your AWS credentials, as described in
+   https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html
+
+2. Deploy the application to a particular stage:
+```
+sls deploy --stage <stage_name> --verbose
+```
+
+To deploy a single service run:
+
+```
+sls <service_name>:deploy --stage <stage_name> --verbose
+```
 
 ### Other good source of information
 
-- https://serverless.com/framework/docs/providers/aws/guide/variables/
-- https://serverless.com/framework/docs/providers/aws/cli-reference/config-credentials/
-
-##
+- Variables in YAML files - https://serverless.com/framework/docs/providers/aws/guide/variables/
+- AWS configuration for serverless
+    - https://serverless.com/framework/docs/providers/aws/cli-reference/config-credentials/
+- Serverless Compose - https://www.serverless.com/framework/docs/guides/compose
 
 ### What do we use for testing lambdas?
 
 1. [supertest](https://github.com/visionmedia/supertest#readme)
 1. [mocha](https://mochajs.org/)
 
-Here you can check example tests: [handler.spec.ts](functions/example-lambda/tests/handler.spec.ts)
-
-##
+Here you can check example tests: [handler.spec.ts](services/example/functions/example-lambda/tests/handler.spec.ts)
 
 ### What do we use for validating schemas?
 
 We use [joi](https://joi.dev/) for schema validation.
 
-##
-
 ### **Issues:**
 
-If you notice any issues while using, let as know on **[github](https://github.com/TheSoftwareHouse/serverless-boilerplate/issues)**.
-Security issues, please sent on <a href="mailto:security.opensource@tsh.io"><b>email</b></a>
-
-### **You may also like our other projects:**
-
-- **[RAD Modules](https://github.com/TheSoftwareHouse/rad-modules)**
-- **[RAD Modules Tools](https://github.com/TheSoftwareHouse/rad-modules-tools)**
-- **[Kakunin](https://github.com/TheSoftwareHouse/Kakunin)**
-- **[Babelsheet-js](https://github.com/TheSoftwareHouse/babelsheet-js)**
-- **[Fogger](https://github.com/TheSoftwareHouse/fogger)**
+If you notice any issues while using, let me know
+on **[GitHub](https://github.com/arturwita/serverless-compose-boilerplate/issues)**.
 
 ### **About us:**
 
 <p align="center">
-  <a href="https://tsh.io/pl"><b>The Software House</b></a>
+  <a href="https://tsh.io"><b>The Software House</b></a>
   &emsp;
   <img src="data/tsh.png" alt="tsh.png" width="50" />
 </p>
-
-##
 
 ### License
 

@@ -1,0 +1,18 @@
+# custom
+logRetentionInDays: 30
+webpack:
+  webpackConfig: "webpack.config.js"
+  packager: "npm"
+  excludeFiles: "./**/*.spec.ts"
+
+# provider
+providerName: aws
+runtime: nodejs16.x
+region: ${env:AWS_LAMBDAS_REGION, 'eu-west-1'}
+stage: ${opt:stage, 'dev'}
+memorySize: 256
+timeout: 30
+
+# package
+package:
+  individually: true

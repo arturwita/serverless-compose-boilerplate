@@ -1,4 +1,10 @@
 image: node:alpine
+
+setup-deps-and-sls: &setup-deps-and-sls |-
+  npm ci --legacy-peer-deps
+  npm i serverless@3.23.0 -g
+  serverless config credentials --provider aws --key ${AWS_LAMBDA_KEY} --secret ${AWS_LAMBDA_SECRET}
+
 definitions:
   steps:
     - step: &compile
@@ -6,38 +12,75 @@ definitions:
         caches:
           - node
         script:
-          - npm install
+          - npm install --legacy-peer-deps
           - npm run lint
-          # - npm run tests
-    - step: &deploy
-        name: Deploy
+        #  - npm run test # uncomment to enable running tests in pipelines
+    - step: &deploy-example
+        name: Deploy example service
         trigger: manual
         caches:
           - node
         script:
-          - npm install
-          - ./node_modules/.bin/serverless config credentials --provider aws --key ${AWS_LAMBDA_KEY} --secret ${AWS_LAMBDA_SECRET}
+          - *setup-deps-and-sls
+          - ./node_modules/.bin/serverless example:deploy --stage ${STAGE}
+          - ./node_modules/.bin/serverless migration:invoke --stage ${STAGE} --function migrations
+    - step: &deploy-migration
+        name: Deploy migration service
+        trigger: manual
+        caches:
+          - node
+        script:
+          - *setup-deps-and-sls
+          - ./node_modules/.bin/serverless migration:deploy --stage ${STAGE}
+          - ./node_modules/.bin/serverless migration:invoke --stage ${STAGE} --function migrations
+    - step: &deploy-all
+        name: Deploy all services
+        trigger: manual
+        # size: 2x # might be necessary at some point
+        caches:
+          - node
+        script:
+          - *setup-deps-and-sls
           - ./node_modules/.bin/serverless deploy --stage ${STAGE}
+          - ./node_modules/.bin/serverless migration:invoke --stage ${STAGE} --function migrations
 
 pipelines:
   default:
     - step: *compile
   custom:
-    deploy-to-dev:
+    deploy-example-to-dev:
       - step: *compile
       - step:
-          <<: *deploy
-          deployment: test
-          name: Deploy to DEV
-
-  branches:
-    master:
+          <<: *deploy-example
+          deployment: dev
+          name: Deploy example service to dev
+    deploy-migration-to-dev:
       - step: *compile
       - step:
-          <<: *deploy
+          <<: *deploy-migration
+          deployment: dev
+          name: Deploy migration service to dev
+    deploy-all-to-dev:
+      - step: *compile
+      - step:
+          <<: *deploy-all
+          deployment: dev
+          name: Deploy all services to dev
+    deploy-example-to-production:
+      - step: *compile
+      - step:
+          <<: *deploy-example
           deployment: production
-    develop:
+          name: Deploy example service to production
+    deploy-migration-to-production:
       - step: *compile
       - step:
-          <<: *deploy
-          deployment: test
+          <<: *deploy-migration
+          deployment: production
+          name: Deploy migration service to production
+    deploy-all-to-production:
+      - step: *compile
+      - step:
+          <<: *deploy-all
+          deployment: production
+          name: Deploy all services to production
