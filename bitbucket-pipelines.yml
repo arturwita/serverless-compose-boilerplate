@@ -57,9 +57,15 @@ pipelines:
     deploy-migration-to-dev:
       - step: *compile
       - step:
-          <<: *deploy-example
+          <<: *deploy-migration
           deployment: dev
           name: Deploy migration service to dev
+    deploy-all-to-dev:
+      - step: *compile
+      - step:
+          <<: *deploy-all
+          deployment: dev
+          name: Deploy all services to dev
     deploy-example-to-production:
       - step: *compile
       - step:
@@ -69,7 +75,12 @@ pipelines:
     deploy-migration-to-production:
       - step: *compile
       - step:
-          <<: *deploy-example
+          <<: *deploy-migration
           deployment: production
           name: Deploy migration service to production
-
+    deploy-all-to-production:
+      - step: *compile
+      - step:
+          <<: *deploy-all
+          deployment: production
+          name: Deploy all services to production
